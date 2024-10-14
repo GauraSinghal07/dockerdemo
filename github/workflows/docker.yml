@@ -1,0 +1,49 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+
+      - name: Build Docker image
+        run: |
+          docker build -t gaurasinghal/demo_web
+
+      - name: Run Tests
+        run: |
+          # You can run your tests here, for example:
+          mvn test
+
+      - name: Run Docker Compose
+        run: |
+          docker-compose up -d
+
+      - name: Wait for the application to be ready
+        run: |
+          # Wait for the application to be ready, adjust the timeout as necessary
+          sleep 30
+
+      - name: Run Integration Tests
+        run: |
+          # Run your integration tests here
+          curl -f http://localhost:8080/api/posts || exit 1
+
+      - name: Shut down Docker Compose
+        run: |
+          docker-compose down

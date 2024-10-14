@@ -32,10 +32,6 @@ public class BlogController {
     public ResponseEntity<Post> createPost(@RequestBody Post post) {
         return ResponseEntity.ok(postService.save(post));
     }
-    @GetMapping
-    public ResponseEntity<?> getPost() {
-        return ResponseEntity.ok(postService.findAll());
-    }
 
 }
 
