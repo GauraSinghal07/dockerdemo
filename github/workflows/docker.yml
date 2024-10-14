@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t gaurasinghal/demo_web
+          docker build -t gaura706/dockerdemo:latest
 
       - name: Run Tests
         run: |
