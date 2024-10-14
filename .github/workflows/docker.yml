@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t gaura706/dockerdemo:latest
+          docker buildx build -t gaura706/dockerdemo:latest .
 
       - name: Run Tests
         run: |
