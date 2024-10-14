@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Web Service (Spring Boot with Java 17)
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile  # Assuming Dockerfile exists in the root directory
+    ports:
+      - "8080:8080"  # Exposing port 8080 for the web service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      SPRING_H2_CONSOLE_ENABLED: "true"
+      SPRING_REDIS_HOST: redis  # Redis host within Docker network
+      SPRING_REDIS_PORT: 6379   # Redis port within Docker network
+      SPRING_CACHE_TYPE: redis
+    depends_on:
+      - redis  # Service dependencies to ensure Redis starts before the web service
+      - h2
+    networks:
+      - app-network
+    deploy:
+      resources:
+        limits:
+          memory: 512M  # Limit memory usage to 512MB
+          cpus: "0.5"   # Limit CPU usage to 0.5 cores
+
+  # Redis Service (In-memory cache)
+  redis:
+    image: redis:latest  # Using official Redis image from Docker Hub
+    ports:
+      - "6379:6379"  # Exposing Redis port 6379
+    networks:
+      - app-network
+
+  # H2 Database Service
+  h2:
+    image: oscarfonts/h2  # Using community H2 database image
+    ports:
+      - "8081:8082"  # H2 database console
+    volumes:
+      - h2-data:/opt/h2-data  # Persist data for H2 database service
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge  # Custom network for inter-service communication
+
+volumes:
+  h2-data:
+    driver: local  # Volume to persist H2 database data
