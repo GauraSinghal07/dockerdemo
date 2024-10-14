@@ -35,3 +35,7 @@ This project sets up a Spring Boot application with an embedded H2 database and 
 - To stop the running services, use:
   docker-compose down
 
+## CI/CD pipeline screenshot
+- 
+<img width="931" alt="CICD pipeline" src="https://github.com/user-attachments/assets/71f7362d-8576-47a4-96d4-61e8b42c5767">
+
